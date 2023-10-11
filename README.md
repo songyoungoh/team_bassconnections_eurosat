@@ -5,7 +5,6 @@ This notebook provides an image classification model using PyTorch. It utilizes 
 
 - **PyTorch**
 - **Torchvision**
-- **Google Colab**
 - **Matplotlib**
 - **Seaborn**
 - **sklearn**
