@@ -15,6 +15,7 @@ The dataset used in this project is sourced from the EuroSAT (https://github.com
 - **os**
 - **random**
 - **collections**
+- **ssl**
 
 ## Usage
 1. Download the dataset.
