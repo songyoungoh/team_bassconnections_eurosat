@@ -5,6 +5,8 @@ We are Bass Connections Team working on tracking climate change with satellites 
 This project utilizes the EuroSAT dataset, which offers satellite images categorized into 10 distinct classes. The dataset is available for public access and can be found on the [EuroSAT GitHub repository](https://github.com/phelber/EuroSAT). You can download it via https://drive.google.com/file/d/158N0Rg0tjCBMDtJrmz8tPPIy-u9OprGR/view?usp=drive_link. For our specific project, the data is split into a training and testing set with an 80%-20% ratio.
 
 The dataset is organized in the following directory hierarchy:
+
+```
 Train_Test_Splits
 │
 ├── train
@@ -14,6 +16,7 @@ Train_Test_Splits
 └── test
     ├── AnnualCrop
     ├── [Other Classes]
+```
 
 ## Requirements
 matplotlib==3.7.2
@@ -25,7 +28,10 @@ seaborn==0.13.0
 torch==2.0.1
 torchvision==0.15.2
 
-use pip install -r requirements.txt to install all the requirements.
+use pip to install all the requirements.
+```
+pip install -r requirements.txt
+```
 
 ## Usage
 1. To do EDA, use 'eda.ipynb' which would give you a good sense of the EuroSAT data.
