@@ -1,21 +1,31 @@
 # Bass Connections 2023-2024
-We are Bass Connections Team working on tracking climate change with satellites and artificial intelligence at Duke University. This repository provides an image classification model using PyTorch. It utilizes a ResNet-50 architecture and is trained on EuroSAT dataset which was released by Helber et al. in 2019. Our evaluation metrics include a confusion matrix and accuracy rate on the test data.
+We are Bass Connections Team working on tracking climate change with satellites and artificial intelligence at Duke University. This repository provides an image classification model using PyTorch. It utilizes a ResNet-50 architecture and is trained on the EuroSAT dataset released by Helber et al. in 2019. Our evaluation metrics include a confusion matrix and accuracy rate on the test data.
 
 ## Dataset
-The dataset used in this project is sourced from the EuroSAT (https://github.com/phelber/EuroSAT) comprised of 10 different classes. We use a 80%-20% of training-test split ratio. You can download it via https://drive.google.com/file/d/158N0Rg0tjCBMDtJrmz8tPPIy-u9OprGR/view?usp=drive_link
+This project utilizes the EuroSAT dataset, which offers satellite images categorized into 10 distinct classes. The dataset is available for public access and can be found on the [EuroSAT GitHub repository](https://github.com/phelber/EuroSAT). You can download it via https://drive.google.com/file/d/158N0Rg0tjCBMDtJrmz8tPPIy-u9OprGR/view?usp=drive_link. For our specific project, the data is split into a training and testing set with an 80%-20% ratio.
+
+The dataset is organized in the following directory hierarchy:
+Train_Test_Splits
+│
+├── train
+│   ├── AnnualCrop
+│   ├── [Other Classes]
+│
+└── test
+    ├── AnnualCrop
+    ├── [Other Classes]
 
 ## Requirements
-- **torch**
-- **torchvision**
-- **sklearn**
-- **numpy**
-- **pandas**
-- **matplotlib**
-- **seaborn**
-- **os**
-- **random**
-- **collections**
-- **ssl**
+matplotlib==3.7.2
+numpy==1.23.5
+pandas==2.0.3
+protobuf==4.23.4
+scikit_learn==1.3.0
+seaborn==0.13.0
+torch==2.0.1
+torchvision==0.15.2
+
+use pip install -r requirements.txt to install all the requirements.
 
 ## Usage
 1. To do EDA, use 'eda.ipynb' which would give you a good sense of the EuroSAT data.
