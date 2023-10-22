@@ -1,3 +1,8 @@
+1. create src/data/result/config.yaml
+2. for src, separate main.ipynb into data.py/train.py/eva.py
+3. save the fig into the result folder.
+
+
 # Bass Connections 2023-2024
 We are Bass Connections Team working on tracking climate change with satellites and artificial intelligence at Duke University. This repository provides an image classification model using PyTorch. It utilizes a ResNet-50 architecture and is trained on the EuroSAT dataset released by Helber et al. in 2019. Our evaluation metrics include a confusion matrix and accuracy rate on the test data.
 
