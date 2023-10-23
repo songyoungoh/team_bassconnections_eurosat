@@ -39,7 +39,6 @@ if __name__ == "__main__":
     with open('config.yaml') as p:
         config = yaml.safe_load(p)
 
-    # Assuming the config has a key named "data_dir" that points to the path of your dataset
     data_dir = config['data_dir']
 
     # Run the main function
