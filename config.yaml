@@ -1,1 +1,3 @@
-data_dir: 'Train_Test_Splits'
+data_dir: Train_Test_Splits
+results_dir: results/
+figure_dir: reports/figures/
