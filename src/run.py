@@ -31,7 +31,6 @@ def run(data_dir):
     # Evaluate the trained model
     true_labels_str, predictions_str = eval_confusion(model1, dataloaders)
 
-    # Optionally, you can return the results or any other information you need
     return true_labels_str, predictions_str
 
 
