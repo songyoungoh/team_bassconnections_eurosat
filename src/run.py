@@ -13,13 +13,18 @@ from torch.utils.data import random_split
 from collections import Counter
 import pandas as pd
 from data import data_create
+from data import data_download
 from model import our_ResNet
 from eval import eval_confusion
 import yaml
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 
-def run(data_dir):
+def run(file_id, data_dir):
+    
+    # Download data to data directory
+    data_download(file_id)
+    
     # Load datasets
     dataloaders, dataset_sizes = data_create(data_dir)
 
@@ -40,7 +45,7 @@ if __name__ == "__main__":
         config = yaml.safe_load(p)
 
     data_dir = config['data_dir']
+    file_id = config['file_id']
 
     # Run the main function
-    run(data_dir)
-
+    run(file_id, data_dir)

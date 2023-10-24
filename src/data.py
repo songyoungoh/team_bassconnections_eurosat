@@ -12,6 +12,9 @@ import random
 from torch.utils.data import random_split
 from collections import Counter
 import pandas as pd
+import gdown
+import zipfile
+import os
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -29,6 +32,28 @@ data_transforms = {
         # transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ]),
 }
+
+def data_download(file_id):
+    # Construct the full download URL from the file ID
+    gdrive_url = f'https://drive.google.com/uc?id={file_id}'
+
+    # Define the local file name and the download path
+    zip_file = "data.zip"
+    download_path = os.path.join(os.getcwd(), zip_file)
+
+    # Download the zip file from Google Drive
+    gdown.download(gdrive_url, download_path, quiet=False)
+
+    # Create a 'data' directory if it doesn't exist
+    if not os.path.exists('data'):
+        os.makedirs('data')
+
+    # Unzip the downloaded file to the 'data' directory
+    with zipfile.ZipFile(download_path, 'r') as zip_ref:
+        zip_ref.extractall('data')
+
+    # Remove the downloaded zip file
+    os.remove(download_path)
 
 def data_create(data_dir):
   image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x), data_transforms[x]) for x in ['train', 'test']}
