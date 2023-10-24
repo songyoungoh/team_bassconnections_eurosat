@@ -44,7 +44,7 @@ def data_create(data_dir, bs=64):
     #     ...
     image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x), data_transforms[x]) for x in ['train', 'test']}
     
-    # Create dataloaders for the datasets with a batch size of 64. 
+    # Create dataloaders for the datasets with a batch size of bs. 
     # Dataloaders are used to efficiently load data in batches during training.
     dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=bs, shuffle=True) for x in ['train', 'test']}
     
