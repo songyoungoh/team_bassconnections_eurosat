@@ -115,6 +115,9 @@ if __name__ == "__main__":
         config = yaml.safe_load(p)
 
     data_dir = config['data_dir']
+
+    # Load datasets
+    dataloaders, dataset_sizes = data_create(data_dir)
     
     # Initialize and train the model
     model1 = our_ResNet()
