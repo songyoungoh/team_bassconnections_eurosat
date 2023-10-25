@@ -65,6 +65,7 @@ def eval_confusion(model, dataloaders):
     class_labels = dataloaders['valid'].dataset.dataset.classes
 
     # Map integer values with string values
+    #POTENTIALLY DON'T NEED THIS
     true_labels_str = [class_labels[i] for i in true_labels]
     predictions_str = [class_labels[i] for i in predictions]
     return true_labels_str, predictions_str
