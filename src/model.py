@@ -20,57 +20,83 @@ import pandas as pd
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
+
+# Custom ResNet class
 class our_ResNet(nn.Module):
     def __init__(self, num_classes=10, learning_rate=0.00001):
         super(our_ResNet, self).__init__()
+        
+        # Use pretrained ResNet50 model
         self.resnet = models.resnet50(pretrained=True)
+        
+        # Modify the final layer to match the number of classes
         num_ftrs = self.resnet.fc.in_features
         self.resnet.fc = nn.Linear(num_ftrs, num_classes)
+        
+        # Set the device for the model
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         self.resnet = self.resnet.to(self.device)
 
+        # Define the loss function and optimizer
         self.criterion = nn.CrossEntropyLoss()
         self.optimizer = optim.Adam(self.resnet.parameters(), lr=learning_rate)
+        
+        # Lists to store loss values for training and validation
         self.train_losses = []
         self.valid_losses = []
 
+    # Forward pass
     def forward(self, x):
         return self.resnet(x)
 
+    # Training loop
     def train_model(self, dataloaders, dataset_sizes, num_epochs=15):
         for epoch in range(num_epochs):
             print(f"Epoch {epoch}/{num_epochs-1}")
+            
+            # store metrics for both training and validation phases
             metrics = {
                 'train': {'loss': 0.0, 'correct': 0},
                 'valid': {'loss': 0.0, 'correct': 0}
             }
 
+            # Loop for both training and validation data
             for phase in ['train', 'valid']:
                 if phase == 'train':
-                    self.train()
+                    self.train()  # Set the model to training mode
                 else:
-                    self.eval()
+                    self.eval()   # Set the model to evaluation mode
 
+                # Iterate over data
                 for inputs, labels in dataloaders[phase]:
                     inputs, labels = inputs.to(self.device), labels.to(self.device)
                     self.optimizer.zero_grad()
+                    
+                    # Forward pass
                     with torch.set_grad_enabled(phase == 'train'):
                         outputs = self(inputs)
                         _, preds = torch.max(outputs, 1)
                         loss = self.criterion(outputs, labels)
+                        
+                        # Backward pass and optimize only in the training phase
                         if phase == 'train':
                             loss.backward()
                             self.optimizer.step()
 
+                    # Update metrics
                     metrics[phase]['loss'] += loss.item() * inputs.size(0)
                     metrics[phase]['correct'] += torch.sum(preds == labels.data)
 
+                # Print epoch loss and accuracy
                 epoch_loss = metrics[phase]['loss'] / dataset_sizes[phase]
                 epoch_acc = metrics[phase]['correct'].double() / dataset_sizes[phase]
                 print(f"{phase}_loss: {epoch_loss:.4f}, {phase}_acc: {epoch_acc:.4f}")
 
+            # Append loss values for plotting
             self.train_losses.append(metrics['train']['loss'] / dataset_sizes['train'])
             self.valid_losses.append(metrics['valid']['loss'] / dataset_sizes['valid'])
+
+    # Plotting function for training and validation losses
     def plot_losses(self):
         plt.figure(figsize=(12, 6))
         plt.plot(self.train_losses, label='Training Loss')
