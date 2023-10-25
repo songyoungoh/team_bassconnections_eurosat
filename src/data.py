@@ -32,9 +32,9 @@ data_transforms = {
     ]),
 }
 
-# Function to read the dataset from the specified directory and return dataloaders and dataset sizes.
+# Function to read the dataset from the given specified directory and return dataloaders and dataset sizes.
 def data_create(data_dir, bs=64):
-    # Create a dictionary of ImageFolder datasets for both training and testing sets.
+    # Create a dictionary of ImageFolder datasets for both training and testing sets
     
     # ImageFolder expects data loader as:
     #     data_dir/train/class1/xxx.png
@@ -44,24 +44,24 @@ def data_create(data_dir, bs=64):
     #     ...
     image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x), data_transforms[x]) for x in ['train', 'test']}
     
-    # Create dataloaders for the datasets with a batch size of bs. 
+    # Create dataloaders for the datasets with a batch size of bs
     dataloaders = {x: torch.utils.data.DataLoader(image_datasets[x], batch_size=bs, shuffle=True) for x in ['train', 'test']}
     
     # Get the size of each dataset
     dataset_sizes = {x: len(image_datasets[x]) for x in ['train', 'test']}
     
-    # Split the training dataset into a training set and a validation set. 
+    # Split a training set and a validation set
     train_dataset = image_datasets['train']
     train_size = int(0.8 * len(train_dataset))
     valid_size = len(train_dataset) - train_size
     train_subset, valid_subset = random_split(train_dataset, [train_size, valid_size])
-    
+
+    # Upload the dataloaders
     dataloaders['train'] = torch.utils.data.DataLoader(train_subset, batch_size=bs, shuffle=True)
     dataloaders['valid'] = torch.utils.data.DataLoader(valid_subset, batch_size=bs)
     
-    # Update the dataset sizes for training and validation subsets.
+    # Update the dataset sizes for training and validation subsets
     dataset_sizes['train'] = len(train_subset)
     dataset_sizes['valid'] = len(valid_subset)
     
-    # Return the dataloaders and dataset sizes.
     return data loaders, dataset_sizes
