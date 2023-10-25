@@ -47,38 +47,38 @@ class our_ResNet(nn.Module):
     # Training loop
     def train_model(self, dataloaders, dataset_sizes, num_epochs=15):
         
-        # loss function and optimizer
+        # Loss function and optimizer
         self.criterion = nn.CrossEntropyLoss()
         self.optimizer = optim.Adam(self.resnet.parameters(), lr=learning_rate)
         
         for epoch in range(num_epochs):
             print(f"Epoch {epoch}/{num_epochs-1}")
             
-            # store metrics for both training and validation phases
+            # Store metrics for both training and validation phases
             metrics = {
                 'train': {'loss': 0.0, 'correct': 0},
                 'valid': {'loss': 0.0, 'correct': 0}
             }
 
-            # Loop for both training and validation data
+            # Train loop
             for phase in ['train', 'valid']:
+                # As the data loader have the train and valid mode(see data.py)
                 if phase == 'train':
-                    self.train()  # Set the model to training mode
+                    self.train()
                 else:
-                    self.eval()   # Set the model to evaluation mode
+                    self.eval() 
 
-                # Iterate over data
                 for inputs, labels in dataloaders[phase]:
                     inputs, labels = inputs.to(self.device), labels.to(self.device)
                     self.optimizer.zero_grad()
                     
-                    # Forward pass
+                    # Forward
                     with torch.set_grad_enabled(phase == 'train'):
                         outputs = self(inputs)
                         _, preds = torch.max(outputs, 1)
                         loss = self.criterion(outputs, labels)
                         
-                        # Backward pass and optimize only in the training phase
+                        # Backward only for train phase
                         if phase == 'train':
                             loss.backward()
                             self.optimizer.step()
@@ -87,12 +87,12 @@ class our_ResNet(nn.Module):
                     metrics[phase]['loss'] += loss.item() * inputs.size(0)
                     metrics[phase]['correct'] += torch.sum(preds == labels.data)
 
-                # Print epoch loss and accuracy
+                # Print the log
                 epoch_loss = metrics[phase]['loss'] / dataset_sizes[phase]
                 epoch_acc = metrics[phase]['correct'].double() / dataset_sizes[phase]
                 print(f"{phase}_loss: {epoch_loss:.4f}, {phase}_acc: {epoch_acc:.4f}")
 
-            # Append loss values for plotting
+            # For plotting
             self.train_losses.append(metrics['train']['loss'] / dataset_sizes['train'])
             self.valid_losses.append(metrics['valid']['loss'] / dataset_sizes['valid'])
 
