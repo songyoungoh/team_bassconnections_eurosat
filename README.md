@@ -18,6 +18,7 @@ Train_Test_Splits
     ├── [Other Classes]
 ```
 
+you need to download it and unzip the file. Then adjust your data path in the config.yaml
 ## Requirements
 matplotlib==3.7.2
 numpy==1.23.5

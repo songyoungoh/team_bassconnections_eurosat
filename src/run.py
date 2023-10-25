@@ -36,7 +36,7 @@ def run(data_dir):
 
 if __name__ == "__main__":
     # Load the configuration file
-    with open('config.yaml') as p:
+    with open('../config.yaml') as p:
         config = yaml.safe_load(p)
 
     data_dir = config['data_dir']
