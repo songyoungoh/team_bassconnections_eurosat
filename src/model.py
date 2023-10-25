@@ -107,3 +107,35 @@ class our_ResNet(nn.Module):
         plt.legend()
         plt.grid(True)
         plt.show()
+
+
+def run(data_dir):
+    # Load datasets
+    dataloaders, dataset_sizes = data_create(data_dir)
+
+    # Initialize and train the model
+    model1 = our_ResNet()
+    model1.train_model(dataloaders, dataset_sizes, num_epochs=3)
+    model1.plot_losses()
+
+    # Evaluate the trained model
+    true_labels_str, predictions_str = eval_confusion(model1, dataloaders)
+
+    return true_labels_str, predictions_str
+
+
+if __name__ == "__main__":
+    # Load the configuration file
+    with open('../config.yaml') as p:
+        config = yaml.safe_load(p)
+
+    data_dir = config['data_dir']
+    
+    # Initialize and train the model
+    model1 = our_ResNet()
+    model1.train_model(dataloaders, dataset_sizes, num_epochs=3)
+    model1.plot_losses()
+
+    # save the model
+    torch.save(model1.state_dict(), 'trained_resnet_model.pth')
+
