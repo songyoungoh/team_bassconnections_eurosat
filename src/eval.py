@@ -69,3 +69,17 @@ def eval_confusion(model, dataloaders):
     true_labels_str = [class_labels[i] for i in true_labels]
     predictions_str = [class_labels[i] for i in predictions]
     return true_labels_str, predictions_str
+
+if __name__ == "__main__":
+    # Load the configuration file
+    with open('../config.yaml') as p:
+        config = yaml.safe_load(p)
+
+    data_dir = config['data_dir']
+
+    model1 = our_ResNet()
+
+    # Load the saved model
+    model1.load_state_dict(torch.load('our_resnet_model.pth'))
+    true_labels_str, predictions_str = eval_confusion(model1, dataloaders)
+
