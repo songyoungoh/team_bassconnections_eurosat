@@ -29,17 +29,12 @@ class our_ResNet(nn.Module):
         # Use pretrained ResNet50 model
         self.resnet = models.resnet50(pretrained=True)
         
-        # Modify the final layer to match the number of classes
+        # Match the number of classes
         num_ftrs = self.resnet.fc.in_features
         self.resnet.fc = nn.Linear(num_ftrs, num_classes)
         
-        # Set the device for the model
         self.device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
         self.resnet = self.resnet.to(self.device)
-
-        # Define the loss function and optimizer
-        self.criterion = nn.CrossEntropyLoss()
-        self.optimizer = optim.Adam(self.resnet.parameters(), lr=learning_rate)
         
         # Lists to store loss values for training and validation
         self.train_losses = []
@@ -51,6 +46,11 @@ class our_ResNet(nn.Module):
 
     # Training loop
     def train_model(self, dataloaders, dataset_sizes, num_epochs=15):
+        
+        # loss function and optimizer
+        self.criterion = nn.CrossEntropyLoss()
+        self.optimizer = optim.Adam(self.resnet.parameters(), lr=learning_rate)
+        
         for epoch in range(num_epochs):
             print(f"Epoch {epoch}/{num_epochs-1}")
             
