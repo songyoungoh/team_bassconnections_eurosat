@@ -64,4 +64,4 @@ def data_create(data_dir, bs=64):
     dataset_sizes['train'] = len(train_subset)
     dataset_sizes['valid'] = len(valid_subset)
     
-    return data loaders, dataset_sizes
+    return dataloaders, dataset_sizes

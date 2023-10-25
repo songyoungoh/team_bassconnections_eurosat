@@ -23,7 +23,7 @@ device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 # Custom ResNet class
 class our_ResNet(nn.Module):
-    def __init__(self, num_classes=10, learning_rate=0.00001):
+    def __init__(self, num_classes=10):
         super(our_ResNet, self).__init__()
         
         # Use pretrained ResNet50 model
@@ -45,7 +45,7 @@ class our_ResNet(nn.Module):
         return self.resnet(x)
 
     # Training loop
-    def train_model(self, dataloaders, dataset_sizes, num_epochs=15):
+    def train_model(self, dataloaders, dataset_sizes, num_epochs=15, learning_rate=0.00001):
         
         # Loss function and optimizer
         self.criterion = nn.CrossEntropyLoss()
