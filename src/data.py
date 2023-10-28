@@ -12,8 +12,11 @@ import random
 from torch.utils.data import random_split
 from collections import Counter
 import pandas as pd
+import gdown
+import zipfile
+import os
 
-device = torch.device("cuda:0" if torch.cuda.is_available() else "CPU")
+device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 # reshape the img to the desired size, and do the normalization
 data_transforms = {
@@ -65,3 +68,29 @@ def data_create(data_dir, bs=64):
     dataset_sizes['valid'] = len(valid_subset)
     
     return dataloaders, dataset_sizes
+
+
+def data_download(file_id):
+    # Construct the full download URL from the file ID
+    gdrive_url = f'https://drive.google.com/uc?id={file_id}'
+
+    # Define the local file name and the download path
+    zip_file = f"data.zip"
+    download_path = os.path.join(os.getcwd(), zip_file)
+
+    # Download the zip file from Google Drive
+    gdown.download(gdrive_url, download_path, quiet=False)
+
+    # Create a 'data' directory if it doesn't exist
+    if not os.path.exists('data'):
+        os.makedirs('data')
+
+    # Unzip the downloaded file to the 'data' directory
+    with zipfile.ZipFile(download_path, 'r') as zip_ref:
+        zip_ref.extractall('data')
+
+    # Remove the downloaded zip file
+    os.remove(download_path)
+
+#Data download for FloodSet
+data_download("1to-3UPPGftpQcNR6tWwxvyWt8Qwu1rRK")
