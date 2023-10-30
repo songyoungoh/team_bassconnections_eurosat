@@ -89,6 +89,6 @@ if __name__ == "__main__":
     model1 = our_ResNet()
 
     # Load the saved model
-    model1.load_state_dict(torch.load('our_resnet_model.pth'))
+    model1.load_state_dict(torch.load('trained_resnet_model.pth'))
     eval_confusion(model1, dataloaders)
 
