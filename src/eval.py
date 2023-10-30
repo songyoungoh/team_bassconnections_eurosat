@@ -38,7 +38,7 @@ def eval_confusion(model, dataloaders):
         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
     ]),
     }
-    dataloaders, dataset_sizes = data_create(data_dir, bs=64)
+
     image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x), data_transforms[x]) for x in ['train', 'test']}
     
     # record the label
