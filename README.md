@@ -2,7 +2,7 @@
 We are Bass Connections Team working on tracking climate change with satellites and artificial intelligence at Duke University. This repository provides an image classification model using PyTorch. It utilizes a ResNet-50 architecture and is trained on the EuroSAT dataset released by Helber et al. in 2019. Our evaluation metrics include a confusion matrix and accuracy rate on the test data.
 
 ## Dataset
-This project utilizes the EuroSAT dataset, which offers satellite images categorized into 10 distinct classes. The dataset is available for public access and can be found on the [EuroSAT GitHub repository](https://github.com/phelber/EuroSAT). You can download it via https://drive.google.com/file/d/158N0Rg0tjCBMDtJrmz8tPPIy-u9OprGR/view?usp=drive_link. For our specific project, the data is split into a training and testing set with an 80%-20% ratio.
+This project utilizes the EuroSAT dataset, which offers satellite images categorized into 10 distinct classes. The dataset is available for public access and can be found on the [EuroSAT GitHub repository](https://github.com/phelber/EuroSAT). For our specific project, the data is split into a training and testing set with an 80%-20% ratio.
 
 The dataset is organized in the following directory hierarchy:
 
@@ -19,6 +19,7 @@ Train_Test_Splits
 ```
 
 you need to download it and unzip the file. Then adjust your data path in the config.yaml
+
 ## Requirements
 matplotlib==3.7.2
 numpy==1.23.5
@@ -35,8 +36,9 @@ pip install -r requirements.txt
 ```
 
 ## Usage
-1. To do EDA, use 'eda.ipynb' which would give you a good sense of the EuroSAT data.
-2. After doing EDA, use 'main.ipynb' to train and evaluate a model. We encourage you to open this file on Google Colab.
-3. Before running 'main.ipynb', please make sure to download the dataset in your google drive('/content/drive/MyDrive/Train_Test_Splits') using 'Train_Test_Splits' as a folder name.
-4. Please also make sure that two subfolders should be named as 'train' and 'test' for loading train and test dataset respectively.
-5. Follow the cells in 'main.ipynb' sequentially. This file already includes code for unzipping data for you.
+1. To do EDA, use 'eda.ipynb' in the 'notebooks' folder. This would give you a good sense of the EuroSAT data.
+2. After doing EDA, use python files in 'src' folder to train and evaluate a model.
+   * data.py: This file is to read the dataset from the given specified directory and return dataloaders along with dataset sizes.
+   * model.py: This file is to import a pre-trained ResNet50 model and train it by iterating 15 epochs with a learning rate of 0.00001.
+   * eval.py: This file is to calculate a test accuracy and get a confusion matrix based on the model's output.
+3. Please make sure that two subfolders of the dataset should be named as 'train' and 'test' for loading train and test dataset successfully.
