@@ -19,9 +19,9 @@ from collections import Counter
 import pandas as pd
 from data import data_create
 from model import our_ResNet
-
+import yaml
 # Function to evaluate the given model and return Test Accuracy.
-def eval_confusion(model, dataloaders):
+def eval_confusion(model):
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
     data_transforms = {
@@ -39,8 +39,23 @@ def eval_confusion(model, dataloaders):
     ]),
     }
 
+    data_transforms = {
+    'train': transforms.Compose([
+        transforms.RandomResizedCrop(224),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    ]),
+    'test': transforms.Compose([
+        transforms.Resize(256),
+        transforms.CenterCrop(224),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    ]),
+    }
+    dataloaders, dataset_sizes = data_create(data_dir, bs=64)
     image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x), data_transforms[x]) for x in ['train', 'test']}
-    
+
     # record the label
     all_labels = []
     all_predictions = []
@@ -81,7 +96,7 @@ def eval_confusion(model, dataloaders):
     
 if __name__ == "__main__":
     # Load the configuration file
-    with open('../config.yaml') as p:
+    with open('./config.yaml') as p:
         config = yaml.safe_load(p)
 
     data_dir = config['data_dir']
@@ -90,5 +105,5 @@ if __name__ == "__main__":
 
     # Load the saved model
     model1.load_state_dict(torch.load('trained_resnet_model.pth'))
-    eval_confusion(model1, dataloaders)
+    eval_confusion(model1)
 

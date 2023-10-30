@@ -17,6 +17,8 @@ import random
 from torch.utils.data import random_split
 from collections import Counter
 import pandas as pd
+import yaml
+from data import data_create
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -111,7 +113,7 @@ class our_ResNet(nn.Module):
 
 if __name__ == "__main__":
     # Load the configuration file
-    with open('../config.yaml') as p:
+    with open('./config.yaml') as p:
         config = yaml.safe_load(p)
 
     data_dir = config['data_dir']
@@ -121,7 +123,7 @@ if __name__ == "__main__":
     
     # Initialize and train the model
     model1 = our_ResNet()
-    model1.train_model(dataloaders, dataset_sizes, num_epochs=3)
+    model1.train_model(dataloaders, dataset_sizes, num_epochs=15)
     model1.plot_losses()
 
     # save the model

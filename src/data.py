@@ -12,6 +12,10 @@ import random
 from torch.utils.data import random_split
 from collections import Counter
 import pandas as pd
+import yaml
+import gdown
+import zipfile
+import os
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "CPU")
 
@@ -88,3 +92,11 @@ def data_create(data_dir, bs=64):
     dataset_sizes['valid'] = len(valid_subset)
     
     return dataloaders, dataset_sizes
+
+
+if __name__ == "__main__":
+  with open('./config.yaml') as p:
+    config = yaml.safe_load(p)
+  file_id = config['file_id']
+  data_dir = config['data_dir']
+  data_download(file_id)
