@@ -42,3 +42,5 @@ pip install -r requirements.txt
    * model.py: This file is to import a pre-trained ResNet50 model and train it by iterating 15 epochs with a learning rate of 0.00001.
    * eval.py: This file is to calculate a test accuracy and get a confusion matrix based on the model's output.
 3. Please make sure that two subfolders of the dataset should be named as 'train' and 'test' for loading train and test dataset successfully.
+4. 'results' folder contains a set of models already trained by us.
+5. 'reports/figures' folder includes multiple png files to show our figures.
