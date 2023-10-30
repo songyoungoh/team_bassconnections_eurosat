@@ -17,59 +17,68 @@ import random
 from torch.utils.data import random_split
 from collections import Counter
 import pandas as pd
-
-device = torch.device("cuda:0" if torch.cuda.is_available() else "CPU")
+from data import data_create
+from model import our_ResNet
 
 # Function to evaluate the given model and return Test Accuracy.
 def eval_confusion(model, dataloaders):
     device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
+
+    data_transforms = {
+    'train': transforms.Compose([
+        transforms.RandomResizedCrop(224),
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    ]),
+    'test': transforms.Compose([
+        transforms.Resize(256),
+        transforms.CenterCrop(224),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+    ]),
+    }
+    dataloaders, dataset_sizes = data_create(data_dir, bs=64)
+    image_datasets = {x: datasets.ImageFolder(os.path.join(data_dir, x), data_transforms[x]) for x in ['train', 'test']}
+    
+    # record the label
+    all_labels = []
+    all_predictions = []
+
+    # get class names, as the predictions are directly numbers
+    class_names = image_datasets['test'].classes
+    
     model.eval()
-    true_labels = []
-    predictions = []
+    correct = 0
+    total = 0
+    with torch.no_grad():
+        for inputs, labels in dataloaders['test']:
+            inputs, labels = inputs.to(device), labels.to(device)
+            outputs = model(inputs)
+            _, predicted = outputs.max(1)
+            total += labels.size(0)
+            correct += (predicted == labels).sum().item()
 
-    # Store the indices of the correct/incorrect predictions and their probabilities
-    incorrect_indices = []
-    incorrect_probs = []
-    correct_indices = []
-    correct_probs = []
-    total_probs = []
+            # Append labels and predictions for confusion matrix
+            all_labels.extend(labels.cpu().numpy())
+            all_predictions.extend(predicted.cpu().numpy())
 
-    for idx, (inputs, labels) in enumerate(dataloaders['valid']):
-      inputs = inputs.to(device)
-      labels = labels.to(device)
+    print(f"Accuracy on test data: {100 * correct / total:.2f}%")
 
-      with torch.no_grad():
-          outputs = model(inputs)
-          _, preds = torch.max(outputs, 1)
+    # Compute the confusion matrix
+    cm = confusion_matrix(all_labels, all_predictions)
 
-      true_labels.extend(labels.cpu().numpy())
-      predictions.extend(preds.cpu().numpy())
+    # Normalize the confusion matrix
+    cm_normalized = cm.astype('float') / cm.sum(axis=1)[:, np.newaxis]
 
-      # Store the incorrectly and correctly classified images and their probabilities
-      for i, (pred, label) in enumerate(zip(preds, labels)):
-          total_probs.append(outputs[i].cpu().numpy())
-          if pred != label:
-              incorrect_indices.append(idx * dataloaders['valid'].batch_size + i)
-              incorrect_probs.append(outputs[i].cpu().numpy())
-          else:
-              correct_indices.append(idx * dataloaders['valid'].batch_size + i)
-              correct_probs.append(outputs[i].cpu().numpy())
-
-    # Get a test accuracy
-    test_acc = np.sum(np.array(true_labels) == np.array(predictions)) / len(true_labels)
-    print('')
-    print(f'Test Accuracy: {test_acc * 100:.2f}%')
-    print(f'Number of Correct Predictions: {np.sum(np.array(true_labels) == np.array(predictions))} / 5400')
-    print(f'Number of Incorrect Predictions: {len(true_labels) - np.sum(np.array(true_labels) == np.array(predictions))} / 5400')
-
-    # Save strings of class labels
-    class_labels = dataloaders['valid'].dataset.dataset.classes
-
-    # Map integer values with string values
-    true_labels_str = [class_labels[i] for i in true_labels]
-    predictions_str = [class_labels[i] for i in predictions]
-    return true_labels_str, predictions_str
-
+    # Display
+    plt.figure(figsize=(10, 8))
+    sns.heatmap(cm_normalized * 100, annot=True, fmt='.2f', cmap='Blues', xticklabels=class_names, yticklabels=class_names)
+    plt.xlabel('Predicted labels')
+    plt.ylabel('True labels')
+    plt.title('Confusion Matrix (Percentages)')
+    plt.show()
+    
 if __name__ == "__main__":
     # Load the configuration file
     with open('../config.yaml') as p:
@@ -81,5 +90,5 @@ if __name__ == "__main__":
 
     # Load the saved model
     model1.load_state_dict(torch.load('our_resnet_model.pth'))
-    true_labels_str, predictions_str = eval_confusion(model1, dataloaders)
+    eval_confusion(model1, dataloaders)
 
