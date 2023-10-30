@@ -32,6 +32,29 @@ data_transforms = {
     ]),
 }
 
+# Function to download the data
+def data_download(file_id):
+    # Construct the full download URL from the file ID
+    gdrive_url = f'https://drive.google.com/uc?id={file_id}'
+
+    # Define the local file name and the download path
+    zip_file = "data.zip"
+    download_path = os.path.join(os.getcwd(), zip_file)
+
+    # Download the zip file from Google Drive
+    gdown.download(gdrive_url, download_path, quiet=False)
+
+    # Create a 'data' directory if it doesn't exist
+    if not os.path.exists('data'):
+        os.makedirs('data')
+
+    # Unzip the downloaded file to the 'data' directory
+    with zipfile.ZipFile(download_path, 'r') as zip_ref:
+        zip_ref.extractall('data')
+
+    # Remove the downloaded zip file
+    os.remove(download_path)
+
 # Function to read the dataset from the given specified directory and return dataloaders and dataset sizes.
 def data_create(data_dir, bs=64):
     # Create a dictionary of ImageFolder datasets for both training and testing sets
