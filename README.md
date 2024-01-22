@@ -1,6 +1,8 @@
 # Bass Connections 2023-2024
 We are Bass Connections Team working on tracking climate change with satellites and artificial intelligence at Duke University. This repository provides an image classification model using PyTorch. It utilizes a ResNet-50 architecture and is trained on the EuroSAT dataset released by Helber et al. in 2019. Our evaluation metrics include a confusion matrix and accuracy rate on the test data.
 
+1/22 Updates: Add the clip code to do the img embedding.
+
 ## Dataset
 This project utilizes the EuroSAT dataset, which offers satellite images categorized into 10 distinct classes. The dataset is available for public access and can be found on the [EuroSAT GitHub repository](https://github.com/phelber/EuroSAT). For our specific project, the data is split into a training and testing set with an 80%-20% ratio.
 
