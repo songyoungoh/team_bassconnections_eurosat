@@ -16,26 +16,36 @@ import yaml
 import gdown
 import zipfile
 import os
-
+import clip
 device = torch.device("cuda:0" if torch.cuda.is_available() else "CPU")
 
 # reshape the img to the desired size, and do the normalization
+# data_transforms = {
+#     'train': transforms.Compose([
+#         transforms.RandomResizedCrop(224),
+#         transforms.RandomHorizontalFlip(),
+#         transforms.ToTensor(),
+#         # this filter is normally used in rgb img, https://pytorch.org/vision/stable/models.html
+#         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+#     ]),
+#     'test': transforms.Compose([
+#         transforms.Resize(256),
+#         transforms.CenterCrop(224),
+#         transforms.ToTensor(),
+#         transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+#     ]),
+# }
+model, preprocess_clip = clip.load("ViT-B/32")
 data_transforms = {
     'train': transforms.Compose([
-        transforms.RandomResizedCrop(224),
-        transforms.RandomHorizontalFlip(),
-        transforms.ToTensor(),
-        # this filter is normally used in rgb img, https://pytorch.org/vision/stable/models.html
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
+        # Add any other transformations you need here
+        preprocess_clip
     ]),
     'test': transforms.Compose([
-        transforms.Resize(256),
-        transforms.CenterCrop(224),
-        transforms.ToTensor(),
-        transforms.Normalize([0.485, 0.456, 0.406], [0.229, 0.224, 0.225])
-    ]),
+        # Add any other transformations you need here
+        preprocess_clip
+    ])
 }
-
 # Function to download the data
 def data_download(file_id):
     # Construct the full download URL from the file ID
